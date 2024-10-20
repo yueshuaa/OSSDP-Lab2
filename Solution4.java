@@ -31,33 +31,39 @@ class Solution4 {
     public int maximumGap(int[] nums) {
 
         int n = nums.length - 1;
-        if (n < 2) {
+        if (n < 1) {
             return 0;
         }
         long exp = 1;
         int[] buf = new int[n];
-        int maxVal = Arrays.stream(nums).max().getAsInt();
+        int maxVal = Arrays.stream(nums).max().getAsInt();//最大值
 
-        while (maxVal > exp) {
+        while (maxVal > exp) {// 当当前位还有数字时继续循环
             int[] cnt = new int[10];
             for (int i = 0; i < n; i++) {
-                int digit = (nums[i] / (int) exp) % 10;
+                int digit = (nums[i] / (int) exp) % 10;// 计算当前位的数字
                 cnt[digit]++;
             }
             for (int i = 1; i < 10; i++){
-                cnt[i] += cnt[i - 1];
-            for (int i = n - 1; i >= 0; i--) {
-                int digit = (nums[i] / (int) exp) % 10;
-                buf[cnt[digit] - 1] = nums[i];
-                cnt[digit]--;
+                cnt[i] += cnt[i - 1];// 累积计数，确定每个数字在排序后的位置
             }
-            System.arraycopy(buf, 0, nums, 0, n);
-            exp += 10;
+            for (int i = n - 1; i >= 0; i--) {// 从后向前遍历
+                int digit = (nums[i] / (int) exp) % 10;
+                buf[cnt[digit] - 1] = nums[i];// 放置元素到正确位置
+                cnt[digit]--;// 更新计数
+            }
+            System.arraycopy(buf, 0, nums, 0, n);// 将排序后的元素复制回原数组
+            exp *= 10; // 移动到下一位
+            
         }
-
         int ret = 0;
             for (int i = 1; i < n; i++) {
             ret = Math.max(ret, nums[i] - nums[i - 1]);
-        }return ret;
+        }
+        return ret;
     }
+    
 }
+
+
+    
